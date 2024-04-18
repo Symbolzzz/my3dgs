@@ -8,19 +8,33 @@
 
 - 数据读取
 
-目前正在写Colmap数据的读取，Blender数据还没写，先把Colmap数据弄完吧
+  目前正在写Colmap数据的读取，Blender数据还没写，先把Colmap数据弄完吧
 
-这一部分主要涉及了摄像机几何中的坐标转换，最后的数据需要经过归一化处理（NeRF++中的思路），将Colmap之后的相机和图片数据相匹配，划分出训练数据和测试数据，读取稀疏点云，为后续的训练做准备。
+  这一部分主要涉及了摄像机几何中的坐标转换，最后的数据需要经过归一化处理（NeRF++中的思路），将Colmap之后的相机和图片数据相匹配，划分出训练数据和测试数据，读取稀疏点云，为后续的训练做准备。
 
-读取点云和创建点云参考[plyfile](https://python-plyfile.readthedocs.io/en/latest/usage.html)。
+  读取点云和创建点云参考[plyfile](https://python-plyfile.readthedocs.io/en/latest/usage.html)。
 
-2024.4.17 完成了数据加载部分。
+  2024.4.17 完成了数据加载部分。
 
-![](images/4.17.png)
+  ![](images/4.17.png)
 
 - 场景初始化
 
+  `scene/__init__.py`：读取数据集，初始化高斯球
+
 - 从点云构建高斯球
+
+  高斯球的方差可以分解成：
+
+  $\Sigma=RSS^{T}R^{T}$
+
+  其中$R$用一个四元数$q$来表示旋转度；$S$用一个三维向量$s$表示体积。
+
+  高斯球的属性值有：
+
+  $\Theta_{i}=\{x_i, q_i, s_i,\alpha_i,c_i\}$
+
+  其中$c_i$是使用最高三阶球谐函数来表示的颜色值。
 
 - 迭代训练
 
